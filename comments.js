@@ -1,35 +1,30 @@
-// Create web server for comments
-// =============================================================================
-
-// Import modules
+// Create web server application with express
 var express = require('express');
-var router = express.Router();
+var app = express();
+// Create a server with http
+var http = require('http').Server(app);
+// Create socket io
+var io = require('socket.io')(http);
+// Create mongoose
+var mongoose = require('mongoose');
+// Create body parser
 var bodyParser = require('body-parser');
-var fs = require('fs');
+// Create a path
 var path = require('path');
-
-// Set up body parser
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: true }));
-
-// Set up comments file
-var commentsFile = path.join(__dirname, '..', 'data', 'comments.json');
-
-// Set up GET request
-router.get('/', function (req, res, next) {
-    res.sendFile(commentsFile);
-});
-
-// Set up POST request
-router.post('/', function (req, res, next) {
-    // Read comments file
-    fs.readFile(commentsFile, 'utf8', function (err, data) {
-        if (err) {
-            console.log(err);
-        } else {
-            // Parse data
-            var comments = JSON.parse(data);
-
-            // Get new comment
-            var newComment = {
-                id: Date.now(),
+// Create an object
+var obj = {};
+// Set the port
+var port = process.env.PORT || 3000;
+// Set the database
+var db = process.env.MONGODB_URI || 'mongodb://localhost:27017/comments';
+// Connect to the database
+mongoose.connect(db);
+// Set the path for the app
+app.use(express.static(path.join(__dirname, 'public')));
+// Set the path for the body parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+// Create a schema
+var Schema = mongoose.Schema;
+// Create a model
+var commentSchema = new Schema({
