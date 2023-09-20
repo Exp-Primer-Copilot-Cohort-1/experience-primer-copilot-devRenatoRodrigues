@@ -27,4 +27,4 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Create a schema
 var Schema = mongoose.Schema;
 // Create a model
-var commentSchema = new Schema({
+var commentSchema = new Schema
